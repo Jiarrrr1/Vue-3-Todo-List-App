@@ -1,35 +1,44 @@
 <template>
     <div>
-        <h1 class="p-6 text-3xl font-bold text-center">Todo App 📋</h1>
-        <TaskForm @addTodo="addTodoHandler" />
-        <TaskList @toggleTask="toggleIsCompleted" @removeTask="removeTodo" />
+      <h1 class="p-6 text-3xl font-bold text-center">Todo App 📋</h1>
+      <TaskForm @addTodo="addTodoHandler" />
+      <TaskList
+        :taskitem="taskList" 
+         @displayTasks="showList"
+          @showStatus="status"
+          @removeTask = "removeTodo"
+         
+      />
     </div>
-</template>
+  </template>
+  
+  <script setup>
+  import { ref , defineAsyncComponent} from "vue";
+  import TaskList from '../components/TaskList.vue';
+  import TaskForm from '../components/TaskForm.vue';
+  import useTodo from '@/store/TodoStore';
+  
+  const { taskList , checkTask, createTask, removeTask } = useTodo();
+  
+  const showList = () => {
+  checkTask();
+};
 
-<script setup>
-import TaskList from '../components/TaskList.vue';
-import TaskForm from '../components/TaskForm.vue';
-import { ref } from "vue";
+  const status = (payload) => {
+        console.log(`Id: ${payload.id}, Task: ${payload.name}, Completed: ${payload.isFinished}`);
+  };
+ 
+  const addTodoHandler = (payload) => {
+    createTask(payload)
+  }
+  
+  const removeTodo = (payload) => {
+    removeTask(payload)
+  }
 
-
-
-
-// const removeTodo = (id) => {
-//     const filteredTodo = taskList.value.filter(t => t.id !== id)
-//     taskList.value = filteredTodo;
-// }
-// const toggleIsCompleted = async (id) => {
-//     console.log(id);
-//     const updatedTask = taskList.value.map((task) => task.id === id ?
-//         { ...task, isCompleted: task.isCompleted = !task.isCompleted } : task)
-//     taskList.value = updatedTask
-//     console.log(updatedTask);
-// }
-// const addTodoHandler = (payload) => {
-//     console.log(payload);
-//     taskList.value.push(payload)
-
-// }
-</script>
-
-<style lang="scss" scoped></style>
+  </script>
+  
+  <style lang="scss" scoped>
+  /* Add your styles here */
+  </style>
+  

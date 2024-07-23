@@ -11,6 +11,8 @@ export function useAuth() {
     }
   };
 
+  
+
   return {
     checkAuth,
     isAuthenticated,

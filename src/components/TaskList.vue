@@ -1,23 +1,43 @@
+<script setup>
+import TaskItem from './TaskItem.vue';
+import { ref, computed, reactive } from 'vue';
+
+const emit = defineEmits([ 'displayTasks', 'removeTask', 'showStatus', 'createTask'])
+const props = defineProps(['taskitem']);
+console.log(props.taskitem);
+const checkTask = () => {
+  emit('displayTasks')
+};
+
+const status = (payload) => {
+  emit('showStatus', payload)
+  
+}
+
+
+
+
+</script>
+
+
+
 <template>
     <section>
-        <h2 class="p-6 text-3xl font-bold text-center">List of Todo</h2>
-        <ul class="">
-            <TaskItem @removeTask="removeTodo" @toggleTask="toggleCheckbox" v-for="task in taskList" :id="task.id"
-                :key="task.id" :name="task.taskName" :isFinished="task.isFinished" />
-        </ul>
+      <ul v-if="checkTask">
+        <TaskItem
+          v-for="item in props.taskitem"
+          :key="item.id"
+          :id="item.id"
+          :name="item.taskname"
+          :isFinished="item.isFinished"
+          @showStatus="status"
+
+        
+        ></TaskItem>
+      </ul>
+      <div v-else>
+        <p class="text-center text-red-500 font-bold uppercase">List of Tasks is Empty</p>
+      </div>
     </section>
-</template>
-<script setup>
-import { useTodo } from '@/store/TodoStore';
-const { taskList } = useTodo()
-import TaskItem from './TaskItem.vue';
-
-const emit = defineEmits(['toggleTask', 'removeTask'])
-
-const toggleCheckbox = (payload) => {
-    emit('toggleTask', payload)
-}
-const removeTodo = (payload) => {
-    emit('removeTask', payload)
-}
-</script>
+  </template>
+  

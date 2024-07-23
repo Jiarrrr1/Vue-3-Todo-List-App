@@ -6,7 +6,7 @@
                     <label class="block mb-2 text-sm font-bold text-gray-700" for="username">
                         Username
                     </label>
-                    <input v-model="userData.username"
+                    <input v-model="userData.email"
                         class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                         id="username" type="text" placeholder="Username">
                 </div>
@@ -42,11 +42,10 @@ import { reactive, ref } from 'vue'
 
 const router = useRouter();
 const userData = reactive({
-    username: '',
+    email: '',
     password: ''
 })
 const login = async () => {
-
     try {
         const newUser = await apiClient.post('/login', userData)
         localStorage.setItem('jwt', newUser.data.content)

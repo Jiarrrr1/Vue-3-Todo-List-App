@@ -1,32 +1,59 @@
-<template>
-    <div class="flex items-center gap-2">
-        <div class="relative  w-full min-w-[200px] h-10 ">
-            <input v-model="inputTodo"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
-                placeholder="" /><label
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">Input
-                Todo
-            </label>
-
-        </div>
-        <button v-on:click="addTodo"
-            class="px-3 py-1 text-2xl font-bold bg-blue-600 rounded-full text-gray-50">+</button>
-    </div>
-</template>
-
 <script setup>
-import { ref } from "vue"
-const inputTodo = ref('')
-const emit = defineEmits(['addTodo'])
-const addTodo = async () => {
-    const todoForm = {
-        id: Date.now(),
-        name: inputTodo.value,
-        isCompleted: false
+import { reactive, computed, ref } from 'vue';
+
+const props = defineProps(['id', 'name', 'isFinished']);
+const emit = defineEmits(['showStatus', 'createTask',]);
+console.log(props.name);
+const newInput = ref('');
+
+const currentTask = reactive({
+  id: props.id,
+  name: props.name,
+  isFinished: props.isFinished,
+});
+
+
+const status = () => {
+  emit('showStatus', currentTask);
+};
+
+const isEditing = computed(() => !props.name);
+
+
+const createTask = () => {
+  if (newInput.name !== '') {
+    const listOfTask = {
+      id: currentTask.id,
+      name: newInput,
+      isFinished: currentTask.isFinished,
     }
-    emit('addTodo', todoForm)
-    inputTodo.value = ''
-}
+    emit('createTask', listOfTask, listOfTask.id)
+    newInput.name = '';
+  }
+};
+
+const removeTodo = (payload) => {
+    removeTask(payload)
+  }
+
 
 
 </script>
+
+
+
+<template>
+  <li class="flex items-center bg-indigo-500 p-8 w-10/12 text-lg gap-6 rounded-xl lg:p-5 sm:p-4 sm:text-sm ">
+    <input :disabled="!isEditing" class="accent-green-600 outline-none border-none scale-150 rounded-xl sm:scale-100 "
+      type="checkbox" v-model="currentTask.isFinished" @change="status" @click="">
+    <p v-if="isEditing" @click=""
+      class=" tracking-widest text-slate-100 capitalize overflow-hidden text-ellipsis whitespace-nowrap px-10 py-2 2xl:text-3xl 2xl:py-5 lg:text-lg sm:px-8">
+      {{ props.name }}
+    </p>
+    <input v-else type="text" v-model="newInput" placeholder="Enter your updated task"
+      class=" update-input absolute bg-transparent border-b-2 outline-none  text-slate-100 tracking-widest overflow-hidden text-ellipsis whitespace-nowrap "
+      @blur="createTask">
+    <button v-if="currentTask.isFinished" @click=""
+      class=" font-semibold text-gray-100 bg-red-600 px-5 py-2 rounded-xl 2xl:py-6 2xl:text-4xl sm:text-xs">Delete</button>
+  </li>
+</template>

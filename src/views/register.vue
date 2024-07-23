@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <div class="w-full max-w-xs">
@@ -7,9 +6,17 @@
                     <label class="block mb-2 text-sm font-bold text-gray-700" for="username">
                         Username
                     </label>
-                    <input v-model="userData.username"
+                    <input v-model="userData.name"
                         class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                         id="username" type="text" placeholder="Username">
+                </div>
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-bold text-gray-700" for="email">
+                        Email
+                    </label>
+                    <input v-model="userData.email"
+                        class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                        id="email" type="text" placeholder="Email">
                 </div>
                 <div class="mb-6">
                     <label class="block mb-2 text-sm font-bold text-gray-700" for="password">
@@ -44,14 +51,16 @@ import { reactive, ref } from 'vue'
 
 const router = useRouter();
 const userData = reactive({
-    username: '',
+    name: '',
+    email:'',
     password: ''
 })
 const registerUser = async () => {
 
     try {
-        const newUser = await apiClient.post('/api/v1/register', {
+        const newUser = await apiClient.post('/register', {
             username: userData.username,
+            email: userData.email,
             password: userData.password
         })
         if (newUser) console.log('Successfully registered!!!')
