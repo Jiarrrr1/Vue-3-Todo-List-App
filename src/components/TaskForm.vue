@@ -83,15 +83,13 @@ const taskForm = reactive ({
 const addTodoHandler = async () => {
   const { addTodo } = useTodo();
   const taskTemplate = reactive ({
-    
         name: taskForm.name,
-        isFinished: false
 })
   try {
     if (taskForm.name === "") {
       return alert("Input is blank");
     }
-    await addTodo(taskTemplate.name, taskTemplate);
+    await addTodo(taskTemplate.name);
     taskForm.name = "";
   } catch (err) {
     console.log(err);

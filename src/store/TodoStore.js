@@ -73,7 +73,7 @@ export function useTodo() {
         return await taskStore.taskList.content.length > 0;   
     };
 
-  const addTodo = async (taskname, task,) => {
+  const addTodo = async (taskname) => {
     try {
       const response = await apiClient.post('/add', { taskname });
       await fetchTodo();  
