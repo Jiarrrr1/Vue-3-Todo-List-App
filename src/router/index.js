@@ -3,7 +3,7 @@ import LoginView from "../views/login.vue";
 import DashBoard from "../views/dashboard.vue";
 import RegisterView from "../views/register.vue";
 import { useAuth } from "@/store/authStore";
-import useTodo from '@/store/TodoStore';
+import { useTodo } from '@/store/TodoStore';
 const { checkAuth, isAuthenticated } = useAuth();
 const { fetchTodo } = useTodo();
 
@@ -34,8 +34,6 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   await checkAuth();
   await fetchTodo();
-  console.log(isAuthenticated.value);
-  //
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     return next('/login');
   }

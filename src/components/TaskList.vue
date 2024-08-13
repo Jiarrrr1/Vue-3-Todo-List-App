@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import TaskItem from './TaskItem.vue';
 import { ref, computed, reactive } from 'vue';
 
@@ -25,7 +25,7 @@ const status = (payload) => {
     <section>
       <ul v-if="checkTask">
         <TaskItem
-          v-for="item in props.taskitem"
+          v-for="item in props"
           :key="item.id"
           :id="item.id"
           :name="item.taskname"
@@ -40,4 +40,21 @@ const status = (payload) => {
       </div>
     </section>
   </template>
-  
+   -->
+
+   <template>
+    <section>
+        <h2 class="p-6 text-3xl font-bold text-center">List of Todo</h2>
+        <ul v-if="checkTask">
+            <TaskItem v-for="task in taskList.content" :key="task._id"
+                :id="task._id" :name="task.name" :isFinished="task.isFinished" />
+        </ul>
+    </section>
+</template>
+<script setup>
+import { useTodo } from '@/store/TodoStore';
+const { taskList, checkTask } = useTodo()
+
+
+import TaskItem from './TaskItem.vue';
+</script>   
